@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  valor: 9.99
+  dt_vencimento: 2020-01-13
+  registration: one
+  status: MyString
+
+two:
+  valor: 9.99
+  dt_vencimento: 2020-01-13
+  registration: two
+  status: MyString

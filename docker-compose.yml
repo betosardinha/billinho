@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  billinho-postgres-compose:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "quero123"
+      POSTGRES_DB: "billinho-db"
+      POSTGRES_USER: "alberto.sardinha"
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./data/postgres:/var/lib/postgresql/data" 
+    networks:
+      - postgres-compose-network
+      
+  billinho-pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "alberto.sardinha@redealumni.com"
+      PGADMIN_DEFAULT_PASSWORD: "quero123"
+    ports:
+      - "15432:80"
+    depends_on:
+      - billinho-postgres-compose
+    networks:
+      - postgres-compose-network
+
+networks: 
+  postgres-compose-network:
+    driver: bridge
