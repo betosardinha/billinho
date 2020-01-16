@@ -36,7 +36,7 @@ module Billinho
       render json: { status: '404', error: "No Institution with id #{params[:id]}", data: institution }, status: :not_found
     end
 
-    # Update Institution by id
+    # Update institution by id
     # Handling errors from not finding the id and wrong data
     def update
       institution = Institution.find(params[:id])

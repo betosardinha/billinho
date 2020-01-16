@@ -5,7 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-require './lib/invoice_date'
+require 'invoice_date'
+require 'invoice_values'
 
 50.times do
   Institution.create({
@@ -27,30 +28,31 @@ end
 end
 
 50.times do |i|
-  valor_total = Faker::Number.decimal(l_digits: 4, r_digits: 2)
-  qd_faturas = rand(1..12)
-  vencimento = rand(1..31)
-
-  Registration.create({
-    valor_total: valor_total,
-    qd_faturas: qd_faturas,
-    vencimento: vencimento,
+  registration = Registration.create({
+    valor_total: Faker::Number.decimal(l_digits: 4, r_digits: 2),
+    qd_faturas: rand(1..12),
+    vencimento: rand(1..31),
     curso: Faker::Educator.subject,
     institution_id: rand(1..50),
     student_id: i+1,
   })
 
-  valor = valor_total / qd_faturas
+  invoice_values = InvoiceValues.new(registration.valor_total, registration.qd_faturas)
 
-  dateit = InvoiceDate.invoice_first_date(vencimento)
+  dateit = InvoiceDate.invoice_first_date(registration.vencimento)
 
-  qd_faturas.times do
+  (registration.qd_faturas - 1).times do
     Invoice.create({
-      valor: valor,
+      valor: invoice_values.invoice_value,
       dt_vencimento: dateit,
-      registration_id: i+1,
+      registration_id: i + 1,
     })
-
-    dateit = InvoiceDate.invoice_date_iter(dateit, vencimento)
+    dateit = InvoiceDate.invoice_date_iter(dateit, registration.vencimento)
   end
+
+  Invoice.create({
+    valor: invoice_values.last_invoice_value,
+    dt_vencimento: dateit,
+    registration_id: i + 1,
+  })
 end
