@@ -26,6 +26,18 @@ services:
     networks:
       - postgres-compose-network
 
+  billinho-rails-compose:
+    build: .
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - .:/billinho-api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - billinho-postgres-compose
+    networks:
+      - postgres-compose-network
+
 networks: 
   postgres-compose-network:
     driver: bridge
